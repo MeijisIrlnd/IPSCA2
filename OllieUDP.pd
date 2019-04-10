@@ -1,0 +1,8 @@
+#N canvas 258 54 643 492 10;
+#X obj 70 293 packOSC;
+#X obj 76 47 arduino;
+#X text 51 148 HANDLE_ARDUINO;
+#X obj 69 353 udpsend SylPort;
+#X msg 133 290 connect "sylip";
+#X connect 0 0 3 0;
+#X connect 4 0 3 0;
