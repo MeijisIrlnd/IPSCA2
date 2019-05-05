@@ -69,14 +69,7 @@ class ParameterReader
     mNote = 110;
   }
 
-  ParameterReader::~ParameterReader()
-  {
-    delete inputState;
-    delete midiOne;
-    delete midiTwo;
-    delete midiThree;
-    delete midiFour;
-  }
+
 
   void txInputMode(int md)
   {
@@ -91,29 +84,33 @@ class ParameterReader
   {
     if(midiOne->getState() == 1)
     {
-      mNote = 110;
+      mNote = 57;
+      txFrequency(mNote);
     }
 
     else if(midiTwo->getState() == 1)
     {
-      mNote = 220;
+      mNote = 61;
+      txFrequency(mNote);
     }
 
     else if(midiThree->getState() == 1)
     {
-      mNote = 440;
+      mNote = 62;
+      txFrequency(mNote);
     }
 
     else if(midiFour->getState() == 1)
     {
-      mNote = 880;
+      mNote = 64;
+      txFrequency(mNote);
     }
 
     else
     {
-      mNote = 0;
+      //mNote = 0;
     }
-    txFrequency(mNote);
+    //txFrequency(mNote);
   }
 
   //Could template this?
@@ -190,13 +187,13 @@ ParameterReader* paramReader = new ParameterReader();
 
 void loop() 
 {
-  paramReader->inputState->getState();
-  paramReader->txInputMode(paramReader->inputState->getCount());
+  int st = paramReader->inputState->getState();
   if(paramReader->inputState->getCount() == 1)
   {
+    //paramReader->txInputMode(0);
     paramReader->setLEDKeyboard();
     paramReader->getNoteVals();
-    paramReader->getHarmonics();
+    //paramReader->getHarmonics();
   }
 
   else
