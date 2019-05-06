@@ -14,7 +14,7 @@ class ToggleButton
     inputPin = ip;
     buttonReading = 0;
     previousState = 0;
-    clim = countLimit;
+    cLim = countLimit;
   
   }
 int getState()
@@ -72,6 +72,7 @@ class ParameterReader
   {
     mNote = 110;
     prevHarmonicLevel = 0;
+    prevReleaseLevel = 0;
   }
   
   //Common Functions
@@ -164,10 +165,10 @@ class ParameterReader
   
   void getRelease()
   {
-    for int i = 0; i < 200; i++
+    for(int i = 0; i < 200; i++)
     {
-      release = analogRead(18);
-      avgRelease += release;
+      rel = analogRead(18);
+      avgRelease += rel;
     }
     avgRelease /= 200;
 
@@ -176,12 +177,14 @@ class ParameterReader
       prevReleaseLevel = avgRelease;
       avgRelease /= 1027;
       avgRelease = 1 - avgRelease;
+      
       txRelease(avgRelease);
       delay(10);
     }
+    prevReleaseLevel = avgRelease;
   }
 
-  void txRelease(int aR)
+  void txRelease(float aR)
   {
     OSCMessage relMessage("/release");
     relMessage.add(aR);
@@ -202,7 +205,7 @@ class ParameterReader
   {
     if(octaveSwitch->getState() == 1)
     {
-      switch(octaveSwitch->getCount)
+      switch(octaveSwitch->getCount())
       {
         case 1:
         {
@@ -362,13 +365,13 @@ class ParameterReader
   float avgHarmonics;
   float prevHarmonicLevel;
 
-  float release;
+  float rel;
   float avgRelease;
   float prevReleaseLevel;
 
   //Guitar Control
-  ToggleButton* octaveSwitch = new ToggleButton(12, 3);
-  ToggleButton* gtrMode = new ToggleButton(11, 3);
+  ToggleButton* octaveSwitch = new ToggleButton(12, 2);
+  ToggleButton* gtrMode = new ToggleButton(11, 2);
   ToggleButton* sampleTrigger = new ToggleButton(10, 1);
   ToggleButton* sampleSelect = new ToggleButton(9, 4);
   
