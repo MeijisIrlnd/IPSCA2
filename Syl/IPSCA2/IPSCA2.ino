@@ -154,6 +154,34 @@ class ParameterReader
     SLIPSerial.endPacket();
   }
   
+  void getRelease()
+  {
+    for int i = 0; i < 200; i++
+    {
+      release = analogRead(18);
+      avgRelease += release;
+    }
+    avgRelease /= 200;
+
+    if(int(avgRelease) != int(prevReleaseLevel))
+    {
+      prevReleaseLevel = avgRelease;
+      avgRelease /= 1027;
+      avgRelease = 1 - avgRelease;
+      txRelease(avgRelease);
+      delay(10);
+    }
+  }
+
+  void txRelease(int aR)
+  {
+    OSCMessage relMessage("/release");
+    relMessage.add(aR);
+    SLIPSerial.beginPacket();
+    relMessage.send(SLIPSerial);
+    SLIPSerial.endPacket();
+  }
+
   void setLEDKeyboard()
   {
     analogWrite(14, 1000);
@@ -178,6 +206,10 @@ class ParameterReader
   float harmonicLevel;
   float avgHarmonics;
   float prevHarmonicLevel;
+
+  float release;
+  float avgRelease;
+  float prevReleaseLevel;
   
 };
 
@@ -196,6 +228,8 @@ void setup() {
   pinMode(16, OUTPUT);
 
   pinMode(17, INPUT);
+
+  pinMode(18, INPUT);
 }
 
 //This is also a pointer, "->"
@@ -210,6 +244,7 @@ void loop()
     paramReader->txInputState();
     paramReader->getNoteVals();
     paramReader->getHarmonics();
+    paramReader->getRelease();
   }
 
   else
